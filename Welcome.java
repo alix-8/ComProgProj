@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Welcome {
+public class Reconnect {
 
     //function for clearing the screen (galing sa internet)
     public static void clear() {
@@ -24,7 +24,7 @@ public class Welcome {
 
     //function para di mag-loop ng mag-loop yung error (para sa input validation)
     public static void pause() {
-        System.out.print("Press Enter to continue...");
+        System.out.print("Press 'Enter' to continue.");
         try {
             System.in.read();
         } catch (IOException ignored) {
@@ -56,7 +56,7 @@ public class Welcome {
             System.out.println("====================================");
             System.out.println("1: Log in");
             System.out.println("2: Sign up");
-            System.out.println("3: Settings");
+            System.out.println("3: Leaderboard");
             System.out.println("4: Exit");
             System.out.println("=====================================");
             try{
@@ -85,11 +85,11 @@ public class Welcome {
 
         }    
         
-       //Log in function
+       //Log in function (username and password (forget password))
 
-       //Sign up function
+       //Sign up function (username and password)
 
-       //Settings function
+       //leaderboard function (may 'open leaderboard' at 'reset leaderboard' methods)
 
      }      
 }
