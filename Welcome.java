@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Reconnect {
+public class Welcome {
 
     //function for clearing the screen (galing sa internet)
     public static void clear() {
