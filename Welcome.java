@@ -29,7 +29,7 @@ public class Reconnect {
             System.in.read();
         } catch (IOException ignored) {
         }
-        }
+    }
 
     //function para ma-display ang main menu
     public static void mainMenu(){
@@ -58,9 +58,9 @@ public class Reconnect {
             System.out.println("2: Sign up");
             System.out.println("3: Leaderboard");
             System.out.println("4: Exit");
-            System.out.println("=====================================");
+            System.out.println("====================================");
             try{
-                System.out.print("Type the number of your choice here: ");
+                System.out.print("Your input here: ");
                 int input = scanner.nextInt();
 
                 
@@ -89,7 +89,7 @@ public class Reconnect {
 
        //Sign up function (username and password)
 
-       //leaderboard function (may 'open leaderboard' at 'reset leaderboard' methods)
+       //leaderboard function (may 'open leaderboard' at 'reset leaderboard' na choices)
 
      }      
 }
