@@ -16,8 +16,10 @@ public class Database {
             System.out.println("Connection successful!");
 
             // migrate(conn);
-            insertEasyQuestions(conn);
-            insertHardQuestions(conn);
+            // insertEasyQuestions(conn);
+            // insertHardQuestions(conn);
+            // insertChoices(conn);
+            createUser(conn);
 
             conn.close();
         } catch (Exception e) {
@@ -92,6 +94,19 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    //inserting the medium questions
+    public static void createUser(Connection conn) {
+
+    try (Statement stmt = conn.createStatement()) {
+       stmt.execute("INSERT INTO users(name, password) VALUES('Test_User', 'password123');");
+
+    System.out.println("User created :D");
+    } catch (SQLException e) {
+        System.err.println("Failed to create user :(" + e.getMessage());
+        e.printStackTrace();
+    }
+}
     //inserting the easy questions
     public static void insertEasyQuestions(Connection conn) {
     String sql = "INSERT INTO questions (question, answer, difficulty) VALUES (?, ?, ?)";
@@ -166,6 +181,105 @@ public class Database {
         System.out.println("Hard questions inserted successfully.");
     } catch (SQLException e) {
         System.err.println("Failed to insert hard questions: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+
+// inserting the choices for easy questions
+public static void insertChoices(Connection conn) {
+    String sql = "INSERT INTO choices (question_id, choice_text, is_correct) VALUES (?, ?, ?)";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String[][] choices = {
+            {"16", "Solid State Drive", "true"},
+            {"16", "Super Speed Device", "false"},
+            {"16", "Solid Storage Drive", "false"},
+            {"16", "System Storage Disk", "false"},
+
+            {"17", "Open-source OS", "true"},
+            {"17", "Closed-source OS", "false"},
+            {"17", "Licensed software", "false"},
+            {"17", "Firmware", "false"},
+
+            {"18", "Temporary memory", "true"},
+            {"18", "Permanent storage", "false"},
+            {"18", "Display resolution", "false"},
+            {"18", "Power backup", "false"},
+
+            {"19", "Web broswer", "true"},
+            {"19", "Operating System", "false"},
+            {"19", "Word processor", "false"},
+            {"19", "Antivirus", "false"},
+
+            {"20", "Human or boot user", "true"},
+            {"20", "Internet speed", "false"},
+            {"20", "Virus presence", "false"},
+            {"20", "Data encryption level", "false"},
+
+            {"21", " Remote servers", "true"},
+            {"21", " USB drives", "false"},
+            {"21", " Physical office PCs", "false"},
+            {"21", " Mobile devices", "false"},
+
+            {"22", " Blocks unauthorized access", "true"},
+            {"22", " Increases internet speed", "false"},
+            {"22", " Repairs damaged files", "false"},
+            {"22", " Updates software", "false"},
+
+            {"23", " A device on a network", "true"},
+            {"23", " A file type", "false"},
+            {"23", " A mobile app", "false"},
+            {"23", " A browser setting", "false"},
+
+            {"24", " OpenAI", "true"},
+            {"24", " Google", "false"},
+            {"24", " Microsoft", "false"},
+            {"24", " IBM", "false"},
+
+            {"25", " At", "true"},
+            {"25", " About", "false"},
+            {"25", " Around", "false"},
+            {"25", " Address", "false"},
+
+            {"26", " James Gosling", "true"},
+            {"26", " Steve Jobs", "false"},
+            {"26", " Bill Gates", "false"},
+            {"26", " Dennis Ritchie", "false"},
+
+            {"27", " 4 bytes", "true"},
+            {"27", " 2 bytes", "false"},
+            {"27", " 8 bytes", "false"},
+            {"27", " 1 byte", "false"},
+
+            {"28", " ArrayList", "true"},
+            {"28", " HashSet", "false"},
+            {"28", " TreeSet", "false"},
+            {"28", " HashMap", "false"},
+
+            {"29", " Java Virtual Machine", "true"},
+            {"29", " Java Virtual Method", "false"},
+            {"29", " Java Variable Manager", "false"},
+            {"29", " Java Version Manager", "false"},
+
+            {"30", " String", "true"},
+            {"30", " int", "false"},
+            {"30", " char", "false"},
+            {"30", " boolean", "false"},
+
+        };
+
+        for (String[] q : choices) {
+            pstmt.setInt(1, Integer.parseInt(q[0])); // convert string to int
+            pstmt.setString(2, q[1]);
+            pstmt.setBoolean(3, Boolean.parseBoolean(q[2])); // convert string to boolean
+            pstmt.addBatch();
+        }
+
+        pstmt.executeBatch();
+
+        System.out.println("Choices inserted successfully.");
+    } catch (SQLException e) {
+        System.err.println("Failed to insert choices: " + e.getMessage());
         e.printStackTrace();
     }
 }
