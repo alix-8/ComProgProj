@@ -52,10 +52,32 @@ public class QuizPortion{
     }
 
 
-    // show user status every quiz item
-    public static void showStatus(){
 
+    // Show user status every quiz item
+    public static void showStatus(Connection conn, int userId) {
+        try {
+            String progressQuery = "SELECT systems_fixed, oxygen_remaining FROM game_progress WHERE user_id = ?";
+            PreparedStatement progressStmt = conn.prepareStatement(progressQuery);
+            progressStmt.setInt(1, userId);
+            ResultSet progressRs = progressStmt.executeQuery();
+
+            // Print progress
+            if (progressRs.next()) {
+                int systemsFixed = progressRs.getInt("systems_fixed");
+                int oxygenRemaining = progressRs.getInt("oxygen_remaining");
+
+                System.out.println("\n📊 Current Progress:");
+                System.out.println("🛠️ Systems Fixed: " + systemsFixed);
+                System.out.println("🫁 Oxygen Remaining: " + oxygenRemaining);
+            } else {
+                System.out.println("\nNo progress record found for user.");
+            }
+        } catch (Exception e) {
+            System.out.println("⚠️ Error fetching progress:");
+            e.printStackTrace();
+        }
     }
+
 
     // display 5 questions every difficulty
 public static void displayQuestion(String difficulty, int userId) {
@@ -124,12 +146,40 @@ public static void displayQuestion(String difficulty, int userId) {
             insertStmt.executeUpdate();
 
             if (isCorrect) {
-                System.out.println("✅ Correct!");
+                clear();
+                System.out.println("Correct!");
+
+                // Add 1 to systems_fixed
+                String updateFixed = "INSERT INTO game_progress (user_id) VALUES (?) " +
+                                    "ON DUPLICATE KEY UPDATE systems_fixed = systems_fixed + 1";
+
+                PreparedStatement updateStmt = conn.prepareStatement(updateFixed);
+                updateStmt.setInt(1, userId); // ✅ Set the value for the placeholder
+                updateStmt.executeUpdate();
+
+                String statusQuery = "SELECT systems_fixed FROM game_progress WHERE user_id = ?";
+                PreparedStatement statusStmt = conn.prepareStatement(statusQuery);
+                statusStmt.setInt(1, userId);
+                ResultSet statusRs = statusStmt.executeQuery();
+
+                // show ang status after a right answer
+                showStatus(conn, userId);
+
             } else {
-                System.out.println("❌ Incorrect! Correct answer was: " + correctLetter);
+                clear();
+                System.out.println("Oops, Incorrect! \n The correct answer was: " + correctLetter);
+
+                // Subtract 20 from oxygen_remaining
+                String updateOxygen = "INSERT INTO game_progress (user_id) VALUES (?) " +
+                            "ON DUPLICATE KEY UPDATE oxygen_remaining = oxygen_remaining - 20";
+                PreparedStatement updateOxyStmt = conn.prepareStatement(updateOxygen);
+                updateOxyStmt.setInt(1, userId); // ✅
+                updateOxyStmt.executeUpdate();
+
+                // show ang status after a wrong answer
+                showStatus(conn, userId);
             }
         }
-
         conn.close();
 
     } catch (Exception e) {
@@ -137,57 +187,6 @@ public static void displayQuestion(String difficulty, int userId) {
         e.printStackTrace();
     }
 }
-
-
-
-
-
-//     public static void checkAnswer(Connection conn, int userId, int questionId, String userAnswer) throws SQLException {
-//     String getChoicesQuery = "SELECT choice_text, is_correct FROM choices WHERE question_id = ?";
-//     PreparedStatement ps = conn.prepareStatement(getChoicesQuery);
-//     ps.setInt(1, questionId);
-//     ResultSet rs = ps.executeQuery();
-
-//     Map<String, Boolean> choicesMap = new LinkedHashMap<>();
-//     char option = 'A';
-//     String correctAnswer = "";
-
-//     while (rs.next()) {
-//         String choiceText = rs.getString("choice_text");
-//         boolean isCorrect = rs.getBoolean("is_correct");
-//         String optionLetter = String.valueOf(option);
-//         choicesMap.put(optionLetter, isCorrect);
-//         if (isCorrect) {
-//             correctAnswer = optionLetter;
-//         }
-//         option++;
-//     }
-
-//     boolean isCorrect = choicesMap.getOrDefault(userAnswer, false);
-
-//     // Insert result into player_answers table
-//     String insertQuery = "INSERT INTO player_answers (user_id, question_id, selected_answer, is_correct) VALUES (?, ?, ?, ?)";
-//     PreparedStatement insertPs = conn.prepareStatement(insertQuery);
-//     insertPs.setInt(1, userId);
-//     insertPs.setInt(2, questionId);
-//     insertPs.setString(3, userAnswer);
-//     insertPs.setBoolean(4, isCorrect);
-//     insertPs.executeUpdate();
-
-//     // Feedback
-//     if (isCorrect) {
-//         System.out.println("✅ Correct!");
-//     } else {
-//         System.out.println("❌ Incorrect! Correct answer was: " + correctAnswer);
-//     }
-// }
-
-
-    // insert game progress
-    public static void insertGameProgress(){
-
-    }
-
 
     // display game summary/review
     public static void review(){
