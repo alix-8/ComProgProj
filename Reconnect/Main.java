@@ -12,7 +12,9 @@ public class Main{
         try {
             while (!gameEnd) {
             Clear.clear();
+            Questions.displayEasyQuestions(1);
             QuizFlow.displayHardQuestions(1);
+            
             
             Clear.clear();
             System.out.println("Continue playing?\nYes = click 'y'\nNo = click any key");
