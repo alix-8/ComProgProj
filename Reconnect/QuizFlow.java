@@ -69,9 +69,8 @@ public class QuizFlow {
             PreparedStatement questionStmt = conn.prepareStatement(questionQuery);
             ResultSet questionRs = questionStmt.executeQuery();
 
-            resetGame(conn, userId);
-
             Scanner scanner = new Scanner(System.in);
+
             int validQuestionCount = 0;
             
             while (questionRs.next() && validQuestionCount < 5) {
@@ -167,6 +166,8 @@ public class QuizFlow {
     }
 
     
+    
+
     public static void resetGame(Connection conn, int userId) {
         try{
             // Clear old answers
