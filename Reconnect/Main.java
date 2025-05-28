@@ -13,41 +13,48 @@ public class Main{
             while (!gameEnd) {
             Clear.clear();
             Questions.displayEasyQuestions(1);
-            QuizFlow.displayHardQuestions(1);
-            
-            
-            Clear.clear();
-            System.out.println("Continue playing?\nYes = click 'y'\nNo = click any key");
-            System.out.print("Your answer: ");
-            String input = scanner.nextLine();
-                if (!input.equalsIgnoreCase("y")) {
-                    gameEnd = true;
-                    Clear.clear();  
 
-                    Scanner scanner1 = new Scanner(System.in);
-                    System.out.println("Thanks for playing!");
-                    System.out.println("-------------------------");
-                    System.out.println("1: Go back to main menu");
-                    System.out.println("2: Close the game");
-                    System.out.print("\nYour choice: ");
-                    int input1 = scanner.nextInt();
+            boolean validChoice = false;
+                while (!validChoice) {
+                    Transitions.phaseOne();
 
-                    switch (input1) {
+                System.out.println("Do you want to continue the game?");
+                System.out.println("1: Yes");
+                System.out.println("2: Back to main menu");
+                System.out.println("3: Retry");
+
+                System.out.print("Your choice:");
+                int input = scanner.nextInt();
+
+                    switch (input) {
                         case 1:
+                            System.out.println("Loading...");
                             Clear.clear();
-                            //call here main menu    
+                            QuizFlow.displayHardQuestions(1);
+                            validChoice = true;
                             break;
                         case 2:
-                            Clear.clear();
-                            gameEnd = true;    
+                            //call main menu here.
+                            validChoice = true;
+                            break;
+                        case 3:
+                            System.out.println("Restarting the game.");
+                            QuizFlow.resetGame(1);
+                            validChoice = true;
                             break;
                         default:
+                            System.out.print("Answer 1, 2, or 3 only.");
+                            QuizFlow.pause();
+                            Clear.clear();
+                            Transitions.phaseOne();
                             break;
                     }
-                    
-                }else{
-                    gameEnd = false;
-                }
+            }
+            
+                Clear.clear();
+            
+            
+            
             }
             
         } catch (Exception e) {
