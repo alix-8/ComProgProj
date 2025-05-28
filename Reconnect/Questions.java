@@ -22,7 +22,7 @@ public static void displayEasyQuestions(int userId) {
         ResultSet questionRs = questionStmt.executeQuery();
 
 
-        QuizFlow.resetGame(conn, userId);
+        QuizFlow.resetGame(userId);
 
         Scanner scanner = new Scanner(System.in);
         int validQuestionCount = 0;
