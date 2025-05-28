@@ -168,17 +168,23 @@ public class QuizFlow {
     
     
 
-    public static void resetGame(Connection conn, int userId) {
-        try{
+    public static void resetGame(int userId) {
+        String URL = "jdbc:mysql://db-mysql-sgp1-information-management-do-user-9437339-0.l.db.ondigitalocean.com:25060/reconnect?useSSL=true&requireSSL=true";
+        String USER = "reconnect_user";
+        String PASSWORD = "AVNS_DB3f2_oo-klHmzd1Nxk";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn1 = DriverManager.getConnection(URL, USER, PASSWORD);
             // Clear old answers
             String deleteAnswers = "DELETE FROM player_answers WHERE user_id = ?";
-            PreparedStatement delAnsStmt = conn.prepareStatement(deleteAnswers);
+            PreparedStatement delAnsStmt = conn1.prepareStatement(deleteAnswers);
             delAnsStmt.setInt(1, userId);
             delAnsStmt.executeUpdate();
 
             // Clear old progress
             String deleteProgress = "DELETE FROM game_progress WHERE user_id = ?";
-            PreparedStatement delProgStmt = conn.prepareStatement(deleteProgress);
+            PreparedStatement delProgStmt = conn1.prepareStatement(deleteProgress);
             delProgStmt.setInt(1, userId);
             delProgStmt.executeUpdate();
         }catch(Exception e) {
